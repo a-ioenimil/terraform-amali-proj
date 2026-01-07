@@ -1,0 +1,31 @@
+// ...existing code...
+aws-amali-cli_accessKeys.csv
+# Local .terraform directories
+**/.terraform/*
+# Terraform state
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+# Terraform config override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+# Sensitive variable files
+*.tfvars
+*.tfvars.json
+# CLI configuration files
+.terraformrc
+terraform.rc
+# Plan files
+*.tfplan
+# Lock file
+.terraform.lock.hcl
+# Editor/IDE
+.vscode/
+.idea/
+# OS
+.DS_Store
+*.swp
+*.swo

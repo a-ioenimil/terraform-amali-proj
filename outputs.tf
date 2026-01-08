@@ -14,3 +14,5 @@ output "app_instance_ips" {
   description = "Private IPs of the application instances"
   value       = module.compute.instance_ips
 }
+
+

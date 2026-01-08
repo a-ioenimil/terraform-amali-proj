@@ -36,7 +36,6 @@ variable "db_password" {
   description = "Password for the database"
   type        = string
   sensitive   = true
-  default     = "password123" # In production, use Secrets Manager
 }
 
 variable "db_engine" {

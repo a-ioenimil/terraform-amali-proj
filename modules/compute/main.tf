@@ -13,76 +13,10 @@ resource "aws_launch_template" "main" {
 
   vpc_security_group_ids = [var.security_group_id]
 
-  # user_data = base64encode(<<-EOF
-  #             #!/bin/bash
-  #             set -e
-              
-  #             # Install Docker
-  #             apt-get update -y
-  #             apt-get install -y docker.io
-  #             systemctl start docker
-  #             systemctl enable docker
-  #             usermod -aG docker ubuntu
-              
-  #             # Wait for Docker to be ready
-  #             until docker info > /dev/null 2>&1; do
-  #               sleep 1
-  #             done
-              
-  #             # Run phpMyAdmin for MySQL management
-  #             docker run -d \
-  #               --name phpmyadmin \
-  #               --restart always \
-  #               -p 80:80 \
-  #               -e "PMA_HOST=${var.rds_endpoint}" \
-  #               -e "PMA_PORT=3306" \
-  #               -e "PMA_ARBITRARY=0" \
-  #               -e "PMA_ABSOLUTE_URI=http://${var.alb_dns_name}/" \
-  #               -v "/some/local/directory/sessions:/sessions:rw" \
-
-  #               phpmyadmin:latest
-              
-  #             # Wait for container to be healthy
-  #             sleep 30
-  #             EOF
-  # )
-
-  user_data = base64encode(<<-EOF
-            #!/bin/bash
-            set -e
-            
-            # Install Docker
-            apt-get update -y
-            apt-get install -y docker.io
-            systemctl start docker
-            systemctl enable docker
-            usermod -aG docker ubuntu
-            
-            # 1. Create the host directory (REQUIRED)
-            # If you don't do this, Docker will create it as 'root', which can break permissions
-            mkdir -p /var/lib/phpmyadmin/sessions
-            chmod 777 /var/lib/phpmyadmin/sessions
-            
-            # Wait for Docker to be ready
-            until docker info > /dev/null 2>&1; do
-              sleep 1
-            done
-            
-            # 2. Run phpMyAdmin with Quoted Volume and Environment Variables
-            docker run -d \
-              --name phpmyadmin \
-              --restart always \
-              -p 80:80 \
-              -e "PMA_HOST=${var.rds_endpoint}" \
-              -e "PMA_PORT=3306" \
-              -e "PMA_ARBITRARY=0" \
-              -e "PMA_ABSOLUTE_URI=http://${var.alb_dns_name}/" \
-              -v "/var/lib/phpmyadmin/sessions:/sessions:rw" \
-              phpmyadmin:latest
-            
-            sleep 30
-            EOF
-)
+  user_data = base64encode(templatefile("${path.module}/user_data.sh", {
+    rds_endpoint = var.rds_endpoint
+    alb_dns_name = var.alb_dns_name
+  }))
 
   tag_specifications {
     resource_type = "instance"

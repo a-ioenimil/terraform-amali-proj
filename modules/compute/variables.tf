@@ -13,6 +13,16 @@ variable "target_group_arn" {
   type        = string
 }
 
+variable "rds_endpoint" {
+  description = "RDS database endpoint"
+  type        = string
+}
+
+variable "alb_dns_name" {
+  description = "ALB DNS name for phpMyAdmin absolute URI"
+  type        = string
+}
+
 variable "instance_type" {
   description = "EC2 instance type"
   type        = string

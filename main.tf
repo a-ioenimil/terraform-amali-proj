@@ -41,6 +41,8 @@ module "compute" {
   subnet_ids        = module.networking.private_app_subnet_ids
   security_group_id = module.security.app_sg_id
   target_group_arn  = module.alb.target_group_arn
+  rds_endpoint      = module.database.address
+  alb_dns_name      = module.alb.alb_dns_name
 
   instance_type = var.instance_type
   project_name  = var.project_name

@@ -23,6 +23,15 @@ resource "aws_lb_target_group" "main" {
     path                = "/"
     healthy_threshold   = 2
     unhealthy_threshold = 10
+    timeout             = 5
+    interval            = 30
+    matcher             = "200-399"
+  }
+
+  stickiness {
+    type            = "lb_cookie"
+    cookie_duration = 86400
+    enabled         = true
   }
 
   tags = {
